@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempo</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/timer.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/spotify.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body data-theme="light">
+    <audio id="alertSound" preload="auto">
+        <source
+            src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUeCC2DzPPdkzwHEIrK6MdxJgUrU6LV7KxLFgI7k8n+z3b2Ej5v0+/2t0b/ATRjx/fF7NvgBS8+mv8YLuviBz43Z9HNhRtD4Ap+QKR0Q9M6Bp8I2cEg2YwazYxPgQqUHpPbT+dQBBnPTzpB"
+            type="audio/wav">
+    </audio>
+
+    <div class="container">
+        <!-- Home Tab -->
+        <div id="homeTab" class="tab-content active">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <h1 class="app-title">Tempo</h1>
+                </div>
+                <button class="try-now-btn">Try Now</button>
+            </div>
+
+            <div class="main-content">
+                <div class="carousel-container" id="carousel-container">
+                    <div class="carousel" id="carousel">
+                        <!-- Carousel items will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <div class="section" id="incompleteSection" style="display: none;">
+                    <h2 class="section-title">Continue Your Work</h2>
+                    <div class="incomplete-tasks" id="incompleteTasks">
+                        <!-- Incomplete tasks will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <div class="section" id="statsSection" style="display: none;">
+                    <h2 class="section-title">Your Focus Statistics <small class="shortcut-text">ctrl + s</small></h2>
+                    <div class="" id="statsContainer">
+                        <!-- Stats will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <div class="section" id="recentSection" style="display: none;">
+                    <h2 class="section-title">Recently Completed</h2>
+                    <div class="recent-tasks" id="recentTasks">
+                        <!-- Recent tasks will be dynamically inserted -->
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Templates</h2>
+                    <div class="templates-grid" id="templatesGrid">
+                        <!-- Templates will be dynamically inserted -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timerTab" class="tab-content">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <h1 class="app-title">Tempo</h1>
+                </div>
+                <div class="header-right-col">
+                    <!-- <button class="add-task-btn desktop hidden" id="addTaskBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Task to Start Timer
+                    </button>
+                    <div class="task-info hidden desktop" id="taskInfo">
+                        <div class="task-name" id="currentTaskName">Deep Work Session</div>
+                        <div class="task-category" id="currentTaskCategory">Work</div>
+                    </div> -->
+
+                    <div class="music-btn" id="musicBtn">
+                        <i class="fas fa-music"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timer-container">
+                <button class="add-task-btn" id="addTaskBtn">
+                    <i class="fas fa-plus"></i>
+                    Add Task to Start Timer
+                </button>
+
+                <div class="task-info hidden mobile" id="taskInfo">
+                    <div class="task-name" id="currentTaskName">Deep Work Session</div>
+                    <div class="task-category" id="currentTaskCategory">Work</div>
+                </div>
+
+                <div class="timer-display">
+                    <div class="progress-container" id="progressContainer">
+                        <!-- Progress ring will be inserted here -->
+                    </div>
+                    <div class="timer-content">
+                        <div class="timer-time" id="timerTime">25:00</div>
+                        <div class="timer-label" id="timerLabel">Ready to Focus</div>
+                    </div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="control-btn stop-btn" id="stopBtn" disabled>
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class="control-btn play-btn" id="playBtn" disabled>
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn pause-btn" id="pauseBtn" disabled style="display: none;">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settingsTab" class="tab-content">
+            <div class="header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-wave-square"></i>
+                    </div>
+                    <h1 class="app-title">Tempo</h1>
+                </div>
+            </div>
+
+            <div class="settings-container">
+                <div class="settings-item">
+                    <div class="settings-info">
+                        <div class="settings-icon">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div>
+                            <h3>Dark Mode</h3>
+                            <p>Switch between light and dark theme</p>
+                        </div>
+                    </div>
+                    <div class="theme-toggle" id="themeToggle">
+                        <div class="theme-toggle-handle"></div>
+                    </div>
+                </div>
+
+                <button class="settings-item settings-btn history">
+                    <div class="settings-info">
+                        <div class="settings-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div>
+                            <h3>History <small class="shortcut-text">ctrl + h</small></h3>
+                            <p>View your completed sessions</p>
+                        </div>
+                    </div>
+                    <!-- <button class="settings-btn">
+                        <i class="fas fa-eye"></i>
+                        View History
+                    </button> -->
+                </button>
+
+                <button class="settings-item settings-btn danger reset">
+                    <div class="settings-info">
+                        <div class="settings-icon">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                        <div>
+                            <h3>Reset Data</h3>
+                            <p>Clear all your data and start fresh</p>
+                        </div>
+                    </div>
+                    <!-- <button class="">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Reset
+                    </button> -->
+                </button>
+
+                <button class="settings-item settings-btn primary install">
+                    <div class="settings-info">
+                        <div class="settings-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div>
+                            <h3>Install Tempo</h3>
+                            <p>Install PWA for seamless offline functionalities</p>
+                        </div>
+                    </div>
+                    <!-- <button class="">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Reset
+                    </button> -->
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a class="nav-item active" data-tab="home">
+                <div class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-label">Home</div>
+            </a>
+            <a class="nav-item" data-tab="timer">
+                <div class="nav-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="nav-label">Timer</div>
+            </a>
+            <a class="nav-item" data-tab="settings">
+                <div class="nav-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="nav-label">Settings</div>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="bottom-sheet" id="taskSheet">
+            <div class="sheet-header">
+                <h3 class="sheet-title">Create New Task</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="taskForm">
+                <div class="form-group">
+                    <label class="form-label" for="taskNameInput">
+                        <i class="fas fa-tasks"></i>
+                        Task Name
+                    </label>
+                    <input type="text" class="form-input" id="taskNameInput" placeholder="Enter task name" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="categorySelect">
+                        <i class="fas fa-tag"></i>
+                        Category
+                    </label>
+                    <select class="form-select" id="categorySelect" required>
+                        <option value="work">Work</option>
+                        <option value="study">Study</option>
+                        <option value="reading">Reading</option>
+                        <option value="exercise">Exercise</option>
+                        <option value="creative">Creative</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="workDuration">
+                        <i class="fas fa-clock"></i>
+                        Work Duration (minutes)
+                    </label>
+                    <input type="number" class="form-input" id="workDuration" value="25" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="breakDuration">
+                        <i class="fas fa-coffee"></i>
+                        Break Duration (minutes)
+                    </label>
+                    <input type="number" class="form-input" id="breakDuration" value="5" min="1" max="30" required>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-play"></i>
+                    Start Timer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Congratulations Modal -->
+    <div class="congratulations" id="congratsModal">
+        <div class="congratulations-content">
+            <div class="trophy-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="congrats-title">Congratulations!</h2>
+            <p class="congrats-message">You have successfully completed your focus session!</p>
+            <button class="submit-btn">
+                <i class="fas fa-arrow-right"></i>
+                Continue
+            </button>
+        </div>
+    </div>
+
+    <!-- Spotify Player Modal -->
+    <div class="modal-overlay" id="spotifyModal">
+        <div class="spotify-drawer" id="spotifyDrawer">
+            <div class="spotify-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Spotify_logo_with_text.svg" alt="Spotify"
+                    class="spotify-logo">
+                <div class="spotify-header__right-col">
+                    <div class="spotify-spinner spinner hidden" id="spotify-spinner"></div>
+                    <button class="close-btn" id="spotifyCloseBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="spotify-tabs" id="spotifyTabs">
+                <!-- <button class="spotify-tab " data-tab="home">
+                    <i class="fas fa-home"></i>
+                    Home
+                </button> -->
+                <button class="spotify-tab active" data-tab="home">
+                    <i class="fas fa-list"></i>
+                    Library
+                </button>
+                <button class="spotify-tab" data-tab="search">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+
+            <div class="spotify-content" id="spotifyContent">
+                <!-- Default view for non-authenticated users -->
+                <div class="spotify-default" id="spotifyDefault">
+                    <iframe id="defaultSpotifyPlayer"
+                        src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0"
+                        width="100%" height="100%" frameBorder="0" allowfullscreen=""
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy">
+                    </iframe>
+                </div>
+
+                <!-- Authenticated user content -->
+                <div class="spotify-authenticated hidden" id="spotifyAuthenticated">
+                    <div class="spotify-tab-content active" id="homeContent">
+                        <h3>Recent Playlists</h3>
+                        <div class="playlist-grid" id="playlistGrid">
+                            <!-- Playlists will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="spotify-tab-content hidden" id="searchContent">
+                        <div class="search-container">
+                            <input type="text" class="search-input"
+                                placeholder="Search for songs, artists, playlists..." id="spotifySearchInput">
+                            <button class="search-btn" id="spotifySearchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="search-results" id="searchResults">
+                            <!-- Search results will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="spotify-tab-content hidden" id="libraryContent">
+                        <h3>Your Library</h3>
+                        <div class="library-items" id="libraryItems">
+                            <!-- Library items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Track Player (Bottom Fixed) -->
+            <div class="current-track-player hidden" id="currentTrackPlayer">
+                <div class="track-info">
+                    <img src="/assets/spotify-track.svg" alt="Track" class="track-image"
+                        id="currentTrackImage">
+                    <div class="track-details">
+                        <div class="track-title" id="currentTrackTitle">No track selected</div>
+                        <div class="track-artist" id="currentTrackArtist">Unknown artist</div>
+                    </div>
+                </div>
+
+                <div class="track-progress">
+                    <span class="progress-time" id="currentTime">0:00</span>
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="progress-handle" id="progressHandle"></div>
+                    </div>
+                    <span class="progress-time" id="totalTime">0:00</span>
+                </div>
+
+                <div class="track-controls">
+                    <button class="control-btn" id="prevBtn">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn play-pause-btn" id="playPauseBtn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn" id="nextBtn">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Connect Spotify Button (for non-authenticated users) -->
+            <div class="connect-spotify" id="connectSpotify">
+                <button class="connect-btn" id="connectSpotifyBtn">
+                    <i class="fab fa-spotify"></i>
+                    Connect to Spotify
+                </button>
+                <p class="premium-text">Requires premium subscription</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/storage.js"></script>
+    <script src="js/timer-controller.js"></script>
+    <script src="js/ui-components.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/Carousel.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/spotify-player.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

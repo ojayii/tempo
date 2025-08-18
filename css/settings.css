@@ -1,0 +1,131 @@
+/* Settings Tab Styles - Settings Items, Theme Toggle */
+
+/* Settings */
+.settings-container {
+    padding: 20px;
+}
+
+.settings-item {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.settings-info {
+    display: flex;
+    align-items: center;
+    /* justify-content: start; */
+    gap: 10px;
+    margin-right: 10px;
+}
+
+.settings-icon {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    background: var(--gradient-primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+}
+
+.settings-info>div {
+    text-align: start;
+}
+
+.settings-item h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.settings-item p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.theme-toggle {
+    min-width: 60px;
+    height: 30px;
+    background: var(--border-color);
+    border-radius: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    /* flex: 1; */
+}
+
+.theme-toggle.active {
+    background: var(--accent-primary);
+}
+
+.theme-toggle-handle {
+    width: 26px;
+    height: 26px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle.active .theme-toggle-handle {
+    transform: translateX(30px);
+}
+
+.settings-btn {
+    /* background: var(--gradient-secondary);
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1; */
+}
+
+/* .settings-btn.danger {
+    background: var(--gradient-danger);
+} */
+
+.settings-btn.danger .settings-icon {
+    background: var(--gradient-danger);
+}
+
+.settings-btn.danger i {
+    color: var(--accent-danger);
+}
+
+.settings-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Mobile adjustments for settings */
+@media (max-width: 480px) {
+    .settings-item {
+        /* flex-direction: column;
+        text-align: center;
+        gap: 16px; */
+    }
+    
+    /* .settings-info {
+        justify-content: center;
+    } */
+}

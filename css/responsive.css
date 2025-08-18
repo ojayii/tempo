@@ -1,0 +1,230 @@
+/* Responsive Design - Mobile and tablet adjustments */
+
+/* Base responsive adjustments */
+@media (max-width: 480px) {
+    .container {
+        max-width: 100%;
+    }
+
+    .header {
+        /* padding: 40px 15px 15px; */
+        /* flex-direction: column; */
+        /* gap: 16px; */
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 360px) {
+    .header {
+        padding: 30px 10px 10px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .section {
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 18px;
+    }
+}
+
+/* Tablet landscape */
+@media (min-width: 768px)
+/* and (max-width: 1024px)  */
+    {
+    .container {
+        max-width: 600px;
+    }
+
+    .templates-grid,
+    .recent-tasks,
+    .incomplete-tasks {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .timer-display {
+        width: 320px;
+        height: 320px;
+    }
+
+    .timer-time {
+        font-size: 56px;
+    }
+
+    .modal-overlay:not(.modal) {
+        justify-content: flex-end;
+    }
+
+    .bottom-sheet:not(.modal) {
+        min-height: 100vh !important;
+        border-radius: 20px 0 0 20px;
+        transform: translateY(0);
+        transform: translateX(100%);
+    }
+
+    .bottom-sheet.show {
+        transform: translateX(0);
+    }
+}
+
+/* Large screens */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 800px;
+        padding-bottom: 1rem;
+    }
+
+    .bottom-nav {
+        top: 0;
+        bottom: 0;
+        left: 4rem;
+        /* right: auto; */
+        gap: 0;
+        flex-direction: column;
+        /* justify-content: flex-start; */
+        width: fit-content;
+        border-top: 0;
+        border-right: solid var(--border-color);
+    }
+
+    .nav-item {
+        flex-direction: row;
+        padding: 1.5rem;
+    }
+
+    .templates-grid,
+    .recent-tasks,
+    .incomplete-tasks {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .timer-display {
+        width: 360px;
+        height: 360px;
+    }
+
+    .timer-time {
+        font-size: 64px;
+    }
+
+    .header {
+        padding: 40px 40px 20px;
+    }
+
+    .main-content {
+        padding: 40px;
+    }
+
+    .add-task-btn.mobile,
+    .task-info.mobile {
+        display: none;
+    }
+
+    .add-task-btn.desktop {
+        display: flex;
+        margin-bottom: 0 !important;
+    }
+
+    .task-info.desktop {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0 !important;
+    }
+
+    .shortcut-text {
+        display: inline !important;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+    .header {
+        padding: 20px 20px 10px;
+    }
+
+    .timer-container {
+        padding: 20px;
+    }
+
+    .timer-display {
+        width: 200px;
+        height: 200px;
+        margin-bottom: 20px;
+    }
+
+    .timer-time {
+        font-size: 32px;
+    }
+
+    .carousel-container {
+        height: 100px;
+    }
+
+    .carousel-card {
+        min-width: 200px;
+        padding: 15px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
+    .logo-icon,
+    .template-icon,
+    .task-icon,
+    .settings-icon {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .carousel {
+        animation: none;
+    }
+
+    .pulse {
+        animation: none;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    .bottom-nav,
+    .modal-overlay,
+    .notification,
+    .toast {
+        display: none !important;
+    }
+
+    .container {
+        max-width: none;
+        padding-bottom: 0;
+    }
+
+    .header {
+        position: static;
+        border-bottom: 2px solid #000;
+    }
+}
