@@ -1,6 +1,5 @@
-/**
- * Modal Controller - Handles all modal interactions
- */
+// Modal Controller - Handles all modal interactions
+
 class ModalController {
     constructor() {
         this.isModalOpen = false;
@@ -8,17 +7,15 @@ class ModalController {
         this.init();
     }
 
-    /**
-     * Initialize modal controller
-     */
+    // Initialize modal controller
+    
     init() {
         this.setupEventListeners();
         this.setupKeyboardHandlers();
     }
 
-    /**
-     * Setup modal event listeners
-     */
+    // Setup modal event listeners
+    
     setupEventListeners() {
         // Setup keyboard handlers
         this.setupKeyboardHandlers();
@@ -39,9 +36,8 @@ class ModalController {
         });
     }
 
-    /**
-     * Setup backdrop click handlers
-     */
+    // Setup backdrop click handlers
+    
     setupBackdropHandlers() {
         // Task modal backdrop
         const taskModal = document.getElementById('taskModal');
@@ -64,9 +60,8 @@ class ModalController {
         }
     }
 
-    /**
-     * Setup keyboard handlers for modals
-     */
+    // Setup keyboard handlers for modals
+    
     setupKeyboardHandlers() {
         document.addEventListener('keydown', (e) => {
             if (this.isModalOpen) {
@@ -83,9 +78,8 @@ class ModalController {
         });
     }
 
-    /**
-     * Show task creation modal
-     */
+    // Show task creation modal
+    
     showTaskModal() {
         const modal = document.getElementById('taskModal');
         const sheet = document.getElementById('taskSheet');
@@ -110,9 +104,8 @@ class ModalController {
         document.body.style.overflow = 'hidden';
     }
 
-    /**
-     * Hide task creation modal
-     */
+    // Hide task creation modal
+    
     hideTaskModal() {
         const modal = document.getElementById('taskModal');
         const sheet = document.getElementById('taskSheet');
@@ -134,9 +127,8 @@ class ModalController {
         }, 300);
     }
 
-    /**
-     * Create new task from modal form
-     */
+    // Create new task from modal form
+    
     createTask(event) {
         event.preventDefault();
 
@@ -185,9 +177,8 @@ class ModalController {
         }
     }
 
-    /**
-     * Reset task form to default values
-     */
+    // Reset task form to default values
+    
     resetTaskForm() {
         const form = document.getElementById('taskForm');
         if (form) {
@@ -200,9 +191,8 @@ class ModalController {
         }
     }
 
-    /**
-     * Show congratulations modal
-     */
+    // Show congratulations modal
+    
     showCongratulations() {
         const modal = document.getElementById('congratsModal');
         if (!modal) return;
@@ -221,20 +211,19 @@ class ModalController {
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
 
-        // Auto-hide after 5 seconds
+        // Auto-hide after 15 seconds
         setTimeout(() => {
             if (this.currentModal === 'congratsModal') {
                 this.hideCongratulations();
             }
-        }, 5000);
+        }, 15000);
 
         // Vibrate device if supported
         uiComponents.vibrate([200, 100, 200, 100, 200]);
     }
 
-    /**
-     * Hide congratulations modal
-     */
+    // Hide congratulations modal
+    
     hideCongratulations() {
         const modal = document.getElementById('congratsModal');
         if (!modal) return;
@@ -247,9 +236,8 @@ class ModalController {
         document.body.style.overflow = '';
     }
 
-    /**
-     * Show history modal
-     */
+    // Show history modal
+    
     showHistoryModal() {
         const history = storage.getHistory();
 
@@ -276,9 +264,8 @@ class ModalController {
         document.body.style.overflow = 'hidden';
     }
 
-    /**
-     * Create history modal HTML
-     */
+    // Create history modal HTML
+    
     createHistoryModal(history) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
@@ -348,9 +335,8 @@ class ModalController {
         return modal;
     }
 
-    /**
-     * Hide history modal
-     */
+    // Hide history modal
+    
     hideHistoryModal() {
         const modal = document.getElementById('historyModal');
         if (!modal) return;
@@ -372,9 +358,8 @@ class ModalController {
         }, 300);
     }
 
-    /**
-     * Show settings reset confirmation
-     */
+    // Show settings reset confirmation
+    
     showResetConfirmation(onConfirm) {
         uiComponents.showConfirmDialog(
             'Reset All Data',
@@ -389,9 +374,8 @@ class ModalController {
         );
     }
 
-    /**
-     * Close current modal
-     */
+    // Close current modal
+    
     closeCurrentModal() {
         switch (this.currentModal) {
             case 'taskModal':
@@ -406,26 +390,20 @@ class ModalController {
         }
     }
 
-    /**
-     * Check if any modal is open
-     */
+    // Check if any modal is open
+    
     isAnyModalOpen() {
         return this.isModalOpen;
     }
 
-    /**
-     * Get current modal name
-     */
+    // Get current modal name
+    
     getCurrentModal() {
         return this.currentModal;
     }
 
-    /**
-     * Show modal with custom content
-     */
-    /**
-     * Show modal with custom content
-     */
+    // Show modal with custom content
+    
     showCustomModal(title, content, actions = []) {
         const modal = document.createElement('div');
         modal.className = 'modal-overlay';
@@ -475,9 +453,8 @@ class ModalController {
         return modal;
     }
 
-    /**
-     * Hide custom modal
-     */
+    // Hide custom modal
+    
     hideCustomModal() {
         const modal = document.getElementById('customModal');
         if (!modal) return;
@@ -499,9 +476,8 @@ class ModalController {
         }, 300);
     }
 
-    /**
-     * Show quick action modal for templates
-     */
+    // Show quick action modal for templates
+    
     showTemplateModal(template) {
         const content = `
             <div style="text-align: center; padding: 20px 0;">
@@ -537,9 +513,8 @@ class ModalController {
         this.showCustomModal(`Start ${template.name}?`, content, actions);
     }
 
-    /**
-     * Get template category description
-     */
+    // Get template category description
+    
     getTemplateDescription(category) {
         const descriptions = {
             work: 'professional tasks, meetings, and project work',
@@ -553,5 +528,4 @@ class ModalController {
     }
 }
 
-// Export the class, don't instantiate yet
 window.ModalController = ModalController;

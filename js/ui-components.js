@@ -1,14 +1,13 @@
-/**
- * UI Components - Reusable UI elements and utilities
- */
+// UI Components - Reusable UI elements and utilities
+
 class UIComponents {
     constructor() {
         this.notificationTimeout = null;
     }
 
-    /**
-     * Show notification message
-     */
+
+// Show notification message
+
     showNotification(message, duration = 3000) {
         const notification = document.getElementById('notification');
         const notificationText = document.getElementById('notificationText');
@@ -28,9 +27,9 @@ class UIComponents {
         }, duration);
     }
 
-    /**
-     * Create template card HTML
-     */
+
+// Create template card HTML
+
     createTemplateCard(template) {
         return `
             <div class="template-card">
@@ -45,9 +44,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Create recent task card HTML
-     */
+
+// Create recent task card HTML
+
     createRecentTaskCard(entry) {
         const categoryIcons = {
             work: 'fas fa-briefcase',
@@ -74,9 +73,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Create incomplete task card HTML
-     */
+
+// Create incomplete task card HTML
+
     createIncompleteTaskCard(incompleteTask) {
         const categoryIcons = {
             work: 'fas fa-briefcase',
@@ -106,9 +105,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Create carousel card HTML
-     */
+
+// Create carousel card HTML
+
     createCarouselCard(item) {
         return `
             <div class="carousel-card">
@@ -121,9 +120,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Format time duration
-     */
+
+// Format time duration
+
     formatDuration(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -138,9 +137,9 @@ class UIComponents {
         }
     }
 
-    /**
-     * Format date for display
-     */
+
+// Format date for display
+
     formatDate(dateString) {
         const date = new Date(dateString);
         const now = new Date();
@@ -158,9 +157,9 @@ class UIComponents {
         }
     }
 
-    /**
-     * Create loading spinner
-     */
+
+// Create loading spinner
+
     createLoader() {
         return `
             <div class="loader">
@@ -170,9 +169,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Create empty state message
-     */
+
+// Create empty state message
+
     createEmptyState(title, message, icon = 'fas fa-inbox') {
         return `
             <div class="empty-state">
@@ -185,9 +184,9 @@ class UIComponents {
         `;
     }
 
-    /**
-     * Animate element entrance
-     */
+
+// Animate element entrance
+
     animateIn(element, animation = 'fadeInUp') {
         if (!element) return;
         
@@ -201,9 +200,9 @@ class UIComponents {
         }, 10);
     }
 
-    /**
-     * Animate element exit
-     */
+
+// Animate element exit
+
     animateOut(element, callback) {
         if (!element) return;
         
@@ -216,9 +215,9 @@ class UIComponents {
         }, 300);
     }
 
-    /**
-     * Create confirmation dialog
-     */
+
+// Create confirmation dialog
+
     showConfirmDialog(title, message, onConfirm, onCancel) {
         const overlay = document.createElement('div');
         overlay.className = 'modal-overlay modal';
@@ -273,9 +272,9 @@ class UIComponents {
         };
     }
 
-    /**
-     * Create toast notification
-     */
+
+// Create toast notification
+
     showToast(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
@@ -331,18 +330,18 @@ class UIComponents {
         }, duration);
     }
 
-    /**
-     * Vibrate device if supported
-     */
+
+// Vibrate device if supported
+
     vibrate(pattern = [200, 100, 200]) {
         if ('vibrate' in navigator) {
             navigator.vibrate(pattern);
         }
     }
 
-    /**
-     * Check if element is in viewport
-     */
+
+// Check if element is in viewport
+
     isInViewport(element) {
         const rect = element.getBoundingClientRect();
         return (
@@ -353,9 +352,9 @@ class UIComponents {
         );
     }
 
-    /**
-     * Smooth scroll to element
-     */
+
+// Smooth scroll to element
+
     scrollToElement(element, offset = 0) {
         if (!element) return;
         
@@ -366,9 +365,9 @@ class UIComponents {
         });
     }
 
-    /**
-     * Debounce function calls
-     */
+
+// Debounce function calls
+
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -381,9 +380,9 @@ class UIComponents {
         };
     }
 
-    /**
-     * Throttle function calls
-     */
+
+// Throttle function calls
+
     throttle(func, limit) {
         let inThrottle;
         return function(...args) {
@@ -396,5 +395,4 @@ class UIComponents {
     }
 }
 
-// Export the class, don't instantiate yet
 window.UIComponents = UIComponents;

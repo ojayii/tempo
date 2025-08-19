@@ -1,6 +1,5 @@
-/**
- * Spotify Player Controller - Uses Authorization Code with PKCE flow
- */
+// Spotify Player Controller - Uses Authorization Code with PKCE flow
+
 class SpotifyPlayer {
     constructor() {
         this.isAuthenticated = false;
@@ -15,8 +14,8 @@ class SpotifyPlayer {
         this.progressInterval = null;
 
         // Spotify API configuration - Authorization Code with PKCE
-        this.clientId = 'a3a725b8aea149189da448808c924c5d'; // Replace with your actual client ID
-        this.redirectUri = 'https://n529842f-5500.uks1.devtunnels.ms/?tab=timer';
+        this.clientId = 'a3a725b8aea149189da448808c924c5d';
+        this.redirectUri = 'https://tempo-gilt.vercel.app/?tab=timer';
         this.scopes = [
             'streaming',
             'user-read-email',
@@ -31,18 +30,16 @@ class SpotifyPlayer {
         this.init();
     }
 
-    /**
-     * Initialize Spotify player
-     */
+    // Initialize Spotify player
+    
     init() {
         this.loadStoredAuth();
         this.handleAuthCallback();
         console.log('SpotifyPlayer: Initialized with PKCE flow');
     }
 
-    /**
-     * Load stored authentication from localStorage
-     */
+    // Load stored authentication from localStorage
+    
     loadStoredAuth() {
         const storedAuth = localStorage.getItem('spotify_auth');
         if (storedAuth) {
@@ -66,14 +63,13 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Save authentication to localStorage
-     */
+    // Save authentication to localStorage
+    
     saveAuth(accessToken, refreshToken, expiresIn) {
         const auth = {
             accessToken: accessToken,
             refreshToken: refreshToken,
-            expiresAt: Date.now() + (expiresIn * 1000)
+            // expiresAt: Date.now() + (expiresIn1000)
         };
         localStorage.setItem('spotify_auth', JSON.stringify(auth));
         this.accessToken = accessToken;
@@ -81,9 +77,8 @@ class SpotifyPlayer {
         this.isAuthenticated = true;
     }
 
-    /**
-     * Generate PKCE code verifier and challenge
-     */
+    // Generate PKCE code verifier and challenge
+    
     generatePKCE() {
         // Generate code verifier
         const array = new Uint32Array(56);
@@ -104,9 +99,8 @@ class SpotifyPlayer {
         });
     }
 
-    /**
-     * Start Spotify authentication using Authorization Code with PKCE
-     */
+    // Start Spotify authentication using Authorization Code with PKCE
+    
     async authenticate() {
         try {
             this.displaySpinner()
@@ -147,18 +141,16 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Generate random string for state parameter
-     */
+    // Generate random string for state parameter
+    
     generateRandomString(length) {
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const values = crypto.getRandomValues(new Uint8Array(length));
         return values.reduce((acc, x) => acc + possible[x % possible.length], '');
     }
 
-    /**
-     * Handle authentication callback
-     */
+    // Handle authentication callback
+    
     async handleAuthCallback() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
@@ -194,9 +186,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Exchange authorization code for access and refresh tokens
-     */
+    // Exchange authorization code for access and refresh tokens
+    
     async exchangeCodeForTokens(code) {
         const codeVerifier = localStorage.getItem('spotify_code_verifier');
         if (!codeVerifier) {
@@ -246,9 +237,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Refresh access token using refresh token
-     */
+    // Refresh access token using refresh token
+    
     async refreshAccessToken(refreshToken) {
         try {
             const response = await fetch('https://accounts.spotify.com/api/token', {
@@ -288,18 +278,16 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Clean up URL by removing query parameters
-     */
+    // Clean up URL by removing query parameters
+    
     cleanupURL() {
         const url = new URL(window.location);
         url.search = '';
         window.history.replaceState({}, document.title, url.toString());
     }
 
-    /**
-     * Show Spotify drawer
-     */
+    // Show Spotify drawer
+    
     showDrawer() {
         const modal = document.getElementById('spotifyModal');
         const drawer = document.getElementById('spotifyDrawer');
@@ -323,9 +311,8 @@ class SpotifyPlayer {
         document.body.style.overflow = 'hidden';
     }
 
-    /**
-     * Hide Spotify drawer
-     */
+    // Hide Spotify drawer
+    
     hideDrawer() {
         const modal = document.getElementById('spotifyModal');
         const drawer = document.getElementById('spotifyDrawer');
@@ -341,9 +328,8 @@ class SpotifyPlayer {
         }, 300);
     }
 
-    /**
-     * Update UI based on authentication status
-     */
+    // Update UI based on authentication status
+    
     updateUI() {
         const defaultView = document.getElementById('spotifyDefault');
         const authenticatedView = document.getElementById('spotifyAuthenticated');
@@ -381,11 +367,10 @@ class SpotifyPlayer {
         spotifySpinner.classList.add('hidden')
     }
 
-    /**
-     * Initialize Spotify Web Playback SDK
-     */
+    // Initialize Spotify Web Playback SDK
+    
     async initializeWebPlayback() {
-        if (this.player) return; // Already initialized
+        if (this.player) return;
 
         try {
             this.displaySpinner()
@@ -451,9 +436,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Load Spotify Web Playback SDK
-     */
+    // Load Spotify Web Playback SDK
+    
     loadSpotifySDK() {
         return new Promise((resolve, reject) => {
             if (window.Spotify) {
@@ -483,9 +467,8 @@ class SpotifyPlayer {
         });
     }
 
-    /**
-     * Make authenticated API request with automatic token refresh
-     */
+    // Make authenticated API request with automatic token refresh
+    
     async makeAPIRequest(url, options = {}) {
         const defaultOptions = {
             headers: {
@@ -515,9 +498,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Load user playlists
-     */
+    // Load user playlists
+    
     async loadUserPlaylists() {
         if (!this.accessToken) return;
 
@@ -539,9 +521,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Display playlists in the UI
-     */
+    // Display playlists in the UI
+    
     displayPlaylists(playlists) {
         const playlistGrid = document.getElementById('playlistGrid');
         if (!playlistGrid) return;
@@ -558,9 +539,8 @@ class SpotifyPlayer {
         `).join('');
     }
 
-    /**
-     * Play a playlist
-     */
+    // Play a playlist
+    
     async playPlaylist(playlistId) {
         this.displaySpinner()
         if (!this.player || !this.deviceId) {
@@ -593,9 +573,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Update current track display
-     */
+    // Update current track display
+    
     updateCurrentTrackDisplay() {
         if (!this.currentTrack) return;
 
@@ -625,9 +604,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Update progress bar
-     */
+    // Update progress bar
+    
     updateProgressBar() {
         const currentTimeEl = document.getElementById('currentTime');
         const totalTimeEl = document.getElementById('totalTime');
@@ -643,15 +621,14 @@ class SpotifyPlayer {
         }
 
         if (progressFill && progressHandle && this.trackDuration > 0) {
-            const progress = (this.currentPosition / this.trackDuration) * 100;
+            // const progress = (this.currentPosition / this.trackDuration)100;
             progressFill.style.width = `${progress}%`;
             progressHandle.style.left = `${progress}%`;
         }
     }
 
-    /**
-     * Start progress tracking
-     */
+    // Start progress tracking
+    
     startProgressTracking() {
         this.stopProgressTracking();
         this.progressInterval = setInterval(() => {
@@ -666,9 +643,8 @@ class SpotifyPlayer {
         }, 1000);
     }
 
-    /**
-     * Stop progress tracking
-     */
+    // Stop progress tracking
+    
     stopProgressTracking() {
         if (this.progressInterval) {
             clearInterval(this.progressInterval);
@@ -676,9 +652,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Format time in mm:ss
-     */
+    // Format time in mm:ss
+    
     formatTime(ms) {
         const seconds = Math.floor(ms / 1000);
         const minutes = Math.floor(seconds / 60);
@@ -686,9 +661,8 @@ class SpotifyPlayer {
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
 
-    /**
-     * Toggle play/pause
-     */
+    // Toggle play/pause
+    
     async togglePlayback() {
         try {
             this.displaySpinner()
@@ -700,9 +674,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Previous track
-     */
+    // Previous track
+    
     async previousTrack() {
         if (!this.player) {
             if (typeof uiComponents !== 'undefined') {
@@ -718,9 +691,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Next track
-     */
+    // Next track
+    
     async nextTrack() {
         if (!this.player) {
             if (typeof uiComponents !== 'undefined') {
@@ -736,9 +708,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Search for tracks
-     */
+    // Search for tracks
+    
     async searchTracks(query) {
         if (!this.accessToken || !query.trim()) return;
         this.displaySpinner()
@@ -760,9 +731,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Display search results
-     */
+    // Display search results
+    
     displaySearchResults(tracks) {
         const searchResults = document.getElementById('searchResults');
         if (!searchResults) return;
@@ -779,9 +749,8 @@ class SpotifyPlayer {
         `).join('');
     }
 
-    /**
-     * Play specific track
-     */
+    // Play specific track
+    
     async playTrack(trackUri) {
         if (!this.player || !this.deviceId) {
             console.error('SpotifyPlayer: Player not ready');
@@ -804,9 +773,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Switch tabs
-     */
+    // Switch tabs
+    
     switchTab(tabName) {
         // Update tab buttons
         document.querySelectorAll('.spotify-tab').forEach(tab => {
@@ -832,9 +800,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Load user library
-     */
+    // Load user library
+    
     async loadLibrary() {
         // Mock library for demo
         const libraryItems = [
@@ -857,9 +824,8 @@ class SpotifyPlayer {
         `).join('');
     }
 
-    /**
-     * Logout from Spotify
-     */
+    // Logout from Spotify
+    
     logout() {
         this.isAuthenticated = false;
         this.accessToken = null;
@@ -878,9 +844,8 @@ class SpotifyPlayer {
         }
     }
 
-    /**
-     * Get current state for persistence
-     */
+    // Get current state for persistence
+    
     getState() {
         return {
             isAuthenticated: this.isAuthenticated,
@@ -891,9 +856,8 @@ class SpotifyPlayer {
         };
     }
 
-    /**
-     * Restore state
-     */
+    // Restore state
+    
     restoreState(state) {
         if (state) {
             this.currentTrack = state.currentTrack;
@@ -913,5 +877,4 @@ class SpotifyPlayer {
     }
 }
 
-// Export the class, don't instantiate yet
 window.SpotifyPlayer = SpotifyPlayer;

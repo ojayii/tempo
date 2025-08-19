@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tempo</title>
+    <title>Tempo - Focus Timer</title>
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/home.css">
@@ -19,7 +20,7 @@
 <body data-theme="light">
     <audio id="alertSound" preload="auto">
         <source
-            src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmUeCC2DzPPdkzwHEIrK6MdxJgUrU6LV7KxLFgI7k8n+z3b2Ej5v0+/2t0b/ATRjx/fF7NvgBS8+mv8YLuviBz43Z9HNhRtD4Ap+QKR0Q9M6Bp8I2cEg2YwazYxPgQqUHpPbT+dQBBnPTzpB"
+            src="/assets/complete-alert.mp3"
             type="audio/wav">
     </audio>
 
@@ -83,15 +84,6 @@
                     <h1 class="app-title">Tempo</h1>
                 </div>
                 <div class="header-right-col">
-                    <!-- <button class="add-task-btn desktop hidden" id="addTaskBtn">
-                        <i class="fas fa-plus"></i>
-                        Add Task to Start Timer
-                    </button>
-                    <div class="task-info hidden desktop" id="taskInfo">
-                        <div class="task-name" id="currentTaskName">Deep Work Session</div>
-                        <div class="task-category" id="currentTaskCategory">Work</div>
-                    </div> -->
-
                     <div class="music-btn" id="musicBtn">
                         <i class="fas fa-music"></i>
                     </div>
@@ -170,10 +162,6 @@
                             <p>View your completed sessions</p>
                         </div>
                     </div>
-                    <!-- <button class="settings-btn">
-                        <i class="fas fa-eye"></i>
-                        View History
-                    </button> -->
                 </button>
 
                 <button class="settings-item settings-btn danger reset">
@@ -186,10 +174,6 @@
                             <p>Clear all your data and start fresh</p>
                         </div>
                     </div>
-                    <!-- <button class="">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Reset
-                    </button> -->
                 </button>
 
                 <button class="settings-item settings-btn primary install">
@@ -202,10 +186,6 @@
                             <p>Install PWA for seamless offline functionalities</p>
                         </div>
                     </div>
-                    <!-- <button class="">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Reset
-                    </button> -->
                 </button>
             </div>
         </div>
@@ -377,7 +357,7 @@
                 </div>
             </div>
 
-            <!-- Current Track Player (Bottom Fixed) -->
+            <!-- Current Track Player -->
             <div class="current-track-player hidden" id="currentTrackPlayer">
                 <div class="track-info">
                     <img src="/assets/spotify-track.svg" alt="Track" class="track-image"
@@ -410,7 +390,7 @@
                 </div>
             </div>
 
-            <!-- Connect Spotify Button (for non-authenticated users) -->
+            <!-- Connect Spotify Button for non-authenticated users -->
             <div class="connect-spotify" id="connectSpotify">
                 <button class="connect-btn" id="connectSpotifyBtn">
                     <i class="fab fa-spotify"></i>

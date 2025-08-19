@@ -1,6 +1,5 @@
-/**
- * Settings Controller - Handles application settings and preferences
- */
+// Settings Controller - Handles application settings and preferences
+
 class SettingsController {
     constructor() {
         this.currentTheme = 'light';
@@ -8,17 +7,15 @@ class SettingsController {
         this.init();
     }
 
-    /**
-     * Initialize settings controller
-     */
+    // Initialize settings controller
+    
     init() {
         this.loadSettings();
         console.log('SettingsController: Initialized');
     }
 
-    /**
-     * Load all settings from storage
-     */
+    // Load all settings from storage
+    
     loadSettings() {
         // Load theme
         this.currentTheme = storage.getTheme();
@@ -32,9 +29,8 @@ class SettingsController {
         console.log('SettingsController: Loaded preferences:', this.preferences);
     }
 
-    /**
-     * Apply theme to the application
-     */
+    // Apply theme to the application
+    
     applyTheme(theme) {
         console.log('SettingsController: Applying theme:', theme);
         
@@ -53,9 +49,8 @@ class SettingsController {
         console.log('SettingsController: Theme applied successfully');
     }
 
-    /**
-     * Update meta theme color for mobile browsers
-     */
+    // Update meta theme color for mobile browsers
+    
     updateMetaThemeColor(theme) {
         let metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (!metaThemeColor) {
@@ -67,9 +62,8 @@ class SettingsController {
         metaThemeColor.content = theme === 'dark' ? '#0f172a' : '#ffffff';
     }
 
-    /**
-     * Toggle between light and dark theme
-     */
+    // Toggle between light and dark theme
+    
     toggleTheme() {
         console.log('SettingsController: Toggle theme called, current:', this.currentTheme);
         
@@ -89,9 +83,8 @@ class SettingsController {
         this.addThemeTransition();
     }
 
-    /**
-     * Add smooth transition effect for theme change
-     */
+    // Add smooth transition effect for theme change
+    
     addThemeTransition() {
         document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
         setTimeout(() => {
@@ -99,9 +92,8 @@ class SettingsController {
         }, 300);
     }
 
-    /**
-     * Update theme toggle UI element
-     */
+    // Update theme toggle UI element
+    
     updateThemeToggleUI() {
         const themeToggle = document.getElementById('themeToggle');
         if (!themeToggle) {
@@ -118,16 +110,14 @@ class SettingsController {
         }
     }
 
-    /**
-     * Get current theme
-     */
+    // Get current theme
+    
     getCurrentTheme() {
         return this.currentTheme;
     }
 
-    /**
-     * Show user history modal
-     */
+    // Show user history modal
+    
     showHistory() {
         if (typeof modal !== 'undefined') {
             modal.showHistoryModal();
@@ -136,9 +126,8 @@ class SettingsController {
         }
     }
 
-    /**
-     * Reset all application data
-     */
+    // Reset all application data
+    
     resetData() {
         if (typeof modal !== 'undefined') {
             modal.showResetConfirmation(() => {
@@ -152,9 +141,8 @@ class SettingsController {
         }
     }
 
-    /**
-     * Perform the actual data reset
-     */
+    // Perform the actual data reset
+    
     performDataReset() {
         console.log('SettingsController: Performing data reset');
         
@@ -185,9 +173,8 @@ class SettingsController {
         console.log('SettingsController: Data reset completed');
     }
 
-    /**
-     * Refresh all UI components after reset
-     */
+    // Refresh all UI components after reset
+    
     refreshAllComponents() {
         // Refresh home page
         if (typeof home !== 'undefined') {
@@ -204,14 +191,13 @@ class SettingsController {
             setTimeout(() => {
                 timerController.updateDisplay();
                 timerController.updateTaskDisplay();
-                timerController.updateModeChip();
+                // timerController.updateModeChip();
             }, 100);
         }
     }
 
-    /**
-     * Get current settings state
-     */
+    // Get current settings state
+    
     getCurrentSettings() {
         return {
             theme: this.currentTheme,
@@ -220,9 +206,8 @@ class SettingsController {
         };
     }
 
-    /**
-     * Update user preferences
-     */
+    // Update user preferences
+    
     updatePreferences(newPreferences) {
         console.log('SettingsController: Updating preferences:', newPreferences);
         
@@ -232,9 +217,8 @@ class SettingsController {
         uiComponents.showNotification('Preferences updated successfully');
     }
 
-    /**
-     * Export user data
-     */
+    // Export user data
+    
     exportData() {
         try {
             console.log('SettingsController: Exporting data');
@@ -259,9 +243,8 @@ class SettingsController {
         }
     }
 
-    /**
-     * Import user data
-     */
+    // Import user data
+    
     importData() {
         console.log('SettingsController: Starting data import');
         
@@ -298,9 +281,8 @@ class SettingsController {
         input.click();
     }
 
-    /**
-     * Show advanced settings modal
-     */
+    // Show advanced settings modal
+    
     showAdvancedSettings() {
         const preferences = this.preferences;
         const stats = storage.getStats();
@@ -386,9 +368,8 @@ class SettingsController {
         }
     }
 
-    /**
-     * Save advanced settings from modal
-     */
+    // Save advanced settings from modal
+    
     saveAdvancedSettings() {
         const workDuration = parseInt(document.getElementById('defaultWorkDuration').value);
         const breakDuration = parseInt(document.getElementById('defaultBreakDuration').value);
@@ -413,9 +394,8 @@ class SettingsController {
         this.updatePreferences(newPreferences);
     }
 
-    /**
-     * Auto-detect system theme preference
-     */
+    // Auto-detect system theme preference
+    
     detectSystemTheme() {
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             return 'dark';
@@ -423,9 +403,8 @@ class SettingsController {
         return 'light';
     }
 
-    /**
-     * Set up system theme listener
-     */
+    // Set up system theme listener
+    
     setupSystemThemeListener() {
         if (window.matchMedia) {
             const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -440,24 +419,21 @@ class SettingsController {
         }
     }
 
-    /**
-     * Refresh settings display
-     */
+    // Refresh settings display
+    
     refreshSettings() {
         this.loadSettings();
         console.log('SettingsController: Settings refreshed');
     }
 
-    /**
-     * Validate theme value
-     */
+    // Validate theme value
+    
     validateTheme(theme) {
         return ['light', 'dark'].includes(theme) ? theme : 'light';
     }
 
-    /**
-     * Force reload theme from storage
-     */
+    // Force reload theme from storage
+    
     reloadTheme() {
         const savedTheme = storage.getTheme();
         const validTheme = this.validateTheme(savedTheme);
@@ -467,5 +443,4 @@ class SettingsController {
     }
 }
 
-// Export the class, don't instantiate yet
 window.SettingsController = SettingsController;

@@ -1,7 +1,6 @@
-/**
- * Main Application Controller
- * Handles all DOM interactions and event binding
- */
+// Main Application Controller
+// Handles all DOM interactions and event binding
+
 class MainController {
     constructor() {
         this.isInitialized = false;
@@ -10,9 +9,8 @@ class MainController {
         this.init();
     }
 
-    /**
-     * Initialize the main controller
-     */
+    // Initialize the main controller
+    
     init() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.onDOMReady());
@@ -21,9 +19,8 @@ class MainController {
         }
     }
 
-    /**
-     * Called when DOM is ready
-     */
+    // Called when DOM is ready
+    
     onDOMReady() {
         console.log('MainController: DOM ready, initializing...');
 
@@ -45,9 +42,8 @@ class MainController {
         }
     }
 
-    /**
-     * Initialize all application modules in correct dependency order
-     */
+    // Initialize all application modules in correct dependency order
+    
     initializeModules() {
         console.log('MainController: Initializing modules...');
 
@@ -113,9 +109,8 @@ class MainController {
         console.log('MainController: All modules initialized successfully');
     }
 
-    /**
-     * Bind all event listeners to DOM elements
-     */
+    // Bind all event listeners to DOM elements
+    
     bindEventListeners() {
         // Navigation events
         this.bindNavigationEvents();
@@ -142,9 +137,8 @@ class MainController {
         this.bindGlobalEvents();
     }
 
-    /**
-     * Bind navigation events
-     */
+    // Bind navigation events
+    
     bindNavigationEvents() {
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach((item, index) => {
@@ -168,9 +162,8 @@ class MainController {
         console.log('MainController: Navigation events bound');
     }
 
-    /**
-     * Bind theme toggle events
-     */
+    // Bind theme toggle events
+    
     bindThemeEvents() {
         const themeToggle = document.getElementById('themeToggle');
         if (themeToggle) {
@@ -183,9 +176,8 @@ class MainController {
         console.log('MainController: Theme events bound');
     }
 
-    /**
-     * Bind timer control events
-     */
+    // Bind timer control events
+    
     bindTimerEvents() {
         // Add Task button
         const addTaskBtn = document.getElementById('addTaskBtn');
@@ -222,9 +214,8 @@ class MainController {
         console.log('MainController: Timer events bound');
     }
 
-    /**
-     * Bind modal events
-     */
+    // Bind modal events
+    
     bindModalEvents() {
         // Task modal form
         const taskForm = document.getElementById('taskForm');
@@ -273,9 +264,8 @@ class MainController {
         console.log('MainController: Modal events bound');
     }
 
-    /**
-     * Bind settings events
-     */
+    // Bind settings events
+    
     bindSettingsEvents() {
         // History button
         const historyBtn = document.querySelector('.settings-item.settings-btn.history');
@@ -305,9 +295,8 @@ class MainController {
         console.log('MainController: Settings events bound');
     }
 
-    /**
-     * Bind Spotify events
-     */
+    // Bind Spotify events
+    
     bindSpotifyEvents() {
         // Music button
         const musicBtn = document.getElementById('musicBtn');
@@ -399,17 +388,14 @@ class MainController {
             this.addEventListenerSafe(progressBar, 'click', (e) => {
                 const rect = progressBar.getBoundingClientRect();
                 const percent = (e.clientX - rect.left) / rect.width;
-                // Note: Seeking would require additional Spotify API implementation
-                console.log('Seek to:', percent * 100 + '%');
             });
         }
 
         console.log('MainController: Spotify events bound');
     }
 
-    /**
-     * Bind home page events
-     */
+    // Bind home page events
+    
     bindHomeEvents() {
         // Template cards - use event delegation since they're dynamically generated
         const templatesGrid = document.getElementById('templatesGrid');
@@ -456,9 +442,8 @@ class MainController {
         console.log('MainController: Home events bound');
     }
 
-    /**
-     * Bind global events
-     */
+    // Bind global events
+    
     bindGlobalEvents() {
         // Keyboard shortcuts
         this.addEventListenerSafe(document, 'keydown', (e) => {
@@ -482,9 +467,8 @@ class MainController {
         console.log('MainController: Global events bound');
     }
 
-    /**
-     * Set initial states
-     */
+    // Set initial states
+    
     setInitialStates() {
         // Load theme first
         this.modules.settings.loadSettings();
@@ -503,9 +487,8 @@ class MainController {
         console.log('MainController: Initial states set');
     }
 
-    /**
-     * Show initialization error
-     */
+    // Show initialization error
+    
     showInitializationError(error) {
         console.error('MainController: Initialization error:', error);
 
@@ -517,22 +500,10 @@ class MainController {
                     </div>
                 </div>
         `;
-
-        // document.body.innerHTML = `
-        //     <div stylaccent-primarye="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; font-family: system-ui;">
-        //         <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
-        //         <h2 style="margin-bottom: 16px; color: #ef4444;">Failed to Load App</h2>
-        //         <p style="margin-bottom: 24px; color: #6b7280;">Error: ${error.message}</p>
-        //         <button onclick="window.location.reload()" style="background: #10b981; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px;">
-        //             Reload App
-        //         </button>
-        //     </div>
-        // `;
     }
 
-    /**
-     * Handle keyboard shortcuts
-     */
+    // Handle keyboard shortcuts
+    
     handleKeyboardShortcuts(e) {
         // Don't interfere with form inputs
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
@@ -602,17 +573,15 @@ class MainController {
         }
     }
 
-    /**
-     * Extract template name from card element
-     */
+    // Extract template name from card element
+    
     extractTemplateNameFromCard(card) {
         const nameElement = card.querySelector('.template-info h4');
         return nameElement ? nameElement.textContent.trim() : null;
     }
 
-    /**
-     * Extract task info from recent task card
-     */
+    // Extract task info from recent task card
+    
     extractTaskInfoFromCard(card) {
         const nameElement = card.querySelector('.task-info-content h4');
         const detailsElement = card.querySelector('.task-info-content p');
@@ -626,16 +595,14 @@ class MainController {
         return { taskName, category };
     }
 
-    /**
-     * Extract task ID from incomplete task card
-     */
+    // Extract task ID from incomplete task card
+    
     extractTaskIdFromCard(card) {
         return card.dataset.taskId ? parseInt(card.dataset.taskId) : null;
     }
 
-    /**
-     * Add event listener with error handling and tracking
-     */
+    // Add event listener with error handling and tracking
+    
     addEventListenerSafe(element, event, handler) {
         if (!element) {
             console.warn(`MainController: Element not found for ${event} event`);
@@ -657,9 +624,8 @@ class MainController {
         this.eventListeners.set(key, { element, event, handler: wrappedHandler });
     }
 
-    /**
-     * Clean up event listeners
-     */
+    // Clean up event listeners
+    
     cleanup() {
         this.eventListeners.forEach(({ element, event, handler }) => {
             element.removeEventListener(event, handler);
@@ -668,14 +634,12 @@ class MainController {
         console.log('MainController: Cleaned up event listeners');
     }
 
-    /**
-     * Rebind dynamic content events
-     */
+    // Rebind dynamic content events
+    
     rebindDynamicEvents() {
         this.bindHomeEvents();
         console.log('MainController: Rebound dynamic events');
     }
 }
 
-// Initialize the main controller - this is the ONLY instantiation
 const mainController = new MainController();

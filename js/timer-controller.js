@@ -1,5 +1,5 @@
 /**
- * Timer Controller - NEW LOGIC AS SPECIFIED
+ * Timer Controller
  * Pause = Break Mode | Play During Break = Resume Focus | Break Completion = Alert + Focus Ready
  */
 class TimerController {
@@ -89,9 +89,6 @@ class TimerController {
         console.log('TimerController: Task resumed in focus mode');
     }
 
-    /**
-     * Toggle timer - COMPLETELY FIXED LOGIC
-     */
     toggleTimer() {
         if (!this.currentTask) {
             console.log('TimerController: No task set');
@@ -117,9 +114,6 @@ class TimerController {
         }
     }
 
-    /**
-     * PAUSE CLICKED = Switch to break mode and auto-start break countdown - FIXED
-     */
     pauseAndStartBreak() {
         console.log('TimerController: PAUSE clicked - switching to break mode');
         
@@ -151,9 +145,6 @@ class TimerController {
         }
     }
 
-    /**
-     * PLAY DURING BREAK = Cancel break and return to focus mode - FIXED
-     */
     cancelBreakAndResumeFocus() {
         console.log('TimerController: CANCELLING BREAK - returning to focus mode');
         
@@ -210,9 +201,6 @@ class TimerController {
         }
     }
 
-    /**
-     * Start break countdown - FIXED to set isRunning = true
-     */
     startBreakCountdown() {
         console.log('TimerController: Starting break countdown for', this.breakTimeRemaining, 'seconds');
         
@@ -413,7 +401,7 @@ class TimerController {
             displayTime = this.focusTimeRemaining;
             totalTime = this.currentTask ? this.currentTask.workDuration * 60 : 1500;
             progressColor = '#10b981'; // Green
-            labelText = 'Focus Time';
+            labelText = 'Work Time';
         } else {
             // BREAK MODE - BLUE
             displayTime = this.breakTimeRemaining;
@@ -672,13 +660,7 @@ class TimerController {
         }
     }
 
-    /**
-     * Remove the old updateModeChip method since we replaced with hamburger
-     */
-    updateModeChip() {
-        // No longer needed - replaced with hamburger button
-    }
+    updateModeChip() { }
 }
 
-// Export the class, don't instantiate yet
 window.TimerController = TimerController;

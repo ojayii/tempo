@@ -1,6 +1,5 @@
-/**
- * Navigation Controller - Handles tab switching and navigation
- */
+// Navigation Controller - Handles tab switching and navigation
+
 class NavigationController {
     constructor() {
         this.currentTab = 'home';
@@ -8,17 +7,15 @@ class NavigationController {
         this.init();
     }
 
-    /**
-     * Initialize navigation
-     */
+    // Initialize navigation
+    
     init() {
         this.setupNavigation();
         this.handleUrlNavigation();
     }
 
-    /**
-     * Setup navigation event listeners
-     */
+    // Setup navigation event listeners
+    
     setupNavigation() {
         // Wait for DOM to be ready
         if (document.readyState === 'loading') {
@@ -55,9 +52,8 @@ class NavigationController {
         });
     }
 
-    /**
-     * Bind navigation events to DOM elements
-     */
+    // Bind navigation events to DOM elements
+    
     bindNavigationEvents() {
         const navItems = document.querySelectorAll('.nav-item');
         
@@ -70,9 +66,8 @@ class NavigationController {
         });
     }
 
-    /**
-     * Handle URL-based navigation
-     */
+    // Handle URL-based navigation
+    
     handleUrlNavigation() {
         const urlParams = new URLSearchParams(window.location.search);
         const tabParam = urlParams.get('tab');
@@ -82,9 +77,8 @@ class NavigationController {
         }
     }
 
-    /**
-     * Switch to specified tab
-     */
+    // Switch to specified tab
+    
     switchTab(tabName, updateHistory = true) {
         if (!tabName || tabName === this.currentTab) return;
 
@@ -149,9 +143,8 @@ class NavigationController {
         document.dispatchEvent(event);
     }
 
-    /**
-     * Handle tab-specific logic when switching
-     */
+    // Handle tab-specific logic when switching
+    
     handleTabSwitch(newTab, previousTab) {
         switch (newTab) {
             case 'home':
@@ -166,7 +159,7 @@ class NavigationController {
                 if (typeof timerController !== 'undefined') {
                     timerController.updateDisplay();
                     timerController.updateTaskDisplay();
-                    timerController.updateModeChip();
+                    // timerController.updateModeChip();
                 }
                 break;
 
@@ -188,9 +181,8 @@ class NavigationController {
         }
     }
 
-    /**
-     * Go back to previous tab
-     */
+    // Go back to previous tab
+    
     goBack() {
         if (this.tabHistory.length > 1) {
             // Remove current tab from history
@@ -204,37 +196,32 @@ class NavigationController {
         }
     }
 
-    /**
-     * Get current tab
-     */
+    // Get current tab
+    
     getCurrentTab() {
         return this.currentTab;
     }
 
-    /**
-     * Check if tab is active
-     */
+    // Check if tab is active
+    
     isTabActive(tabName) {
         return this.currentTab === tabName;
     }
 
-    /**
-     * Get tab history
-     */
+    // Get tab history
+    
     getTabHistory() {
         return [...this.tabHistory];
     }
 
-    /**
-     * Clear tab history
-     */
+    // Clear tab history
+    
     clearHistory() {
         this.tabHistory = [this.currentTab];
     }
 
-    /**
-     * Navigate to tab with animation
-     */
+    // Navigate to tab with animation
+    
     navigateWithAnimation(tabName, animation = 'slide') {
         const currentTabElement = document.querySelector('.tab-content.active');
         const targetTabElement = document.getElementById(`${tabName}Tab`);
@@ -251,9 +238,8 @@ class NavigationController {
         });
     }
 
-    /**
-     * Set up PWA-style navigation
-     */
+    // Set up PWA-style navigation
+    
     setupPWANavigation() {
         // Handle hardware back button on mobile
         if ('serviceWorker' in navigator) {
@@ -278,18 +264,16 @@ class NavigationController {
         });
     }
 
-    /**
-     * Show install prompt for PWA
-     */
+    // Show install prompt for PWA
+    
     showInstallPrompt() {
         // This would show a custom install prompt
         // Implementation depends on specific PWA requirements
         console.log('PWA install prompt available');
     }
 
-    /**
-     * Handle deep linking
-     */
+    // Handle deep linking
+    
     handleDeepLink(link) {
         const linkParts = link.split('/');
         const tabName = linkParts[0];
@@ -321,9 +305,8 @@ class NavigationController {
         }
     }
 
-    /**
-     * Generate shareable link for current state
-     */
+    // Generate shareable link for current state
+    
     generateShareableLink() {
         const baseUrl = window.location.origin + window.location.pathname;
         const params = new URLSearchParams();
@@ -339,5 +322,4 @@ class NavigationController {
     }
 }
 
-// Export the class, don't instantiate yet
 window.NavigationController = NavigationController;

@@ -1,8 +1,7 @@
 // import { Carousel } from "./Carousel";
 
-/**
- * Home Controller - Handles home page functionality
- */
+// Home Controller - Handles home page functionality
+
 class HomeController {
     constructor() {
         this.templates = [
@@ -64,9 +63,8 @@ class HomeController {
         this.init();
     }
 
-    /**
-     * Initialize home controller
-     */
+    // Initialize home controller
+    
     init() {
         this.renderCarousel();
         this.renderTemplates();
@@ -74,15 +72,15 @@ class HomeController {
         this.renderIncompleteTasks();
         this.setupEventListeners();
         this.renderStats()
+        this.checkDailyMotivation()
 
         // Debug: Log incomplete tasks
         const incompleteTasks = storage.getIncompleteTasks();
         console.log('Incomplete tasks on init:', incompleteTasks);
     }
 
-    /**
-     * Setup event listeners
-     */
+    // Setup event listeners
+    
     setupEventListeners() {
         // Listen for tab changes to refresh data
         document.addEventListener('tabChanged', (e) => {
@@ -97,9 +95,8 @@ class HomeController {
         });
     }
 
-    /**
-     * Render carousel based on user history
-     */
+    // Render carousel based on user history
+    
     renderCarousel() {
         const carousel = document.getElementById('carousel');
         if (!carousel) return;
@@ -177,9 +174,8 @@ class HomeController {
         });
     }
 
-    /**
-     * Render template cards
-     */
+    // Render template cards
+    
     renderTemplates() {
         const templatesGrid = document.getElementById('templatesGrid');
         if (!templatesGrid) return;
@@ -189,9 +185,8 @@ class HomeController {
         ).join('');
     }
 
-    /**
-     * Render recent completed tasks
-     */
+    // Render recent completed tasks
+    
     renderRecentTasks() {
         const history = storage.getHistory();
         const recentSection = document.getElementById('recentSection');
@@ -213,9 +208,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Render incomplete tasks that can be resumed
-     */
+    // Render incomplete tasks that can be resumed
+    
     renderIncompleteTasks() {
         const incompleteTasks = storage.getIncompleteTasks();
         const incompleteSection = document.getElementById('incompleteSection');
@@ -242,9 +236,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Use a template to start a new task
-     */
+    // Use a template to start a new task
+    
     useTemplate(templateName) {
         const template = this.templates.find(t => t.name === templateName);
         if (!template) {
@@ -256,9 +249,8 @@ class HomeController {
         modal.showTemplateModal(template);
     }
 
-    /**
-     * Start template session directly without modal
-     */
+    // Start template session directly without modal
+    
     startTemplateSession(templateName) {
         const template = this.templates.find(t => t.name === templateName);
         if (!template) return;
@@ -282,9 +274,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Start template directly (called from modal)
-     */
+    // Start template directly (called from modal)
+    
     startTemplate(templateName) {
         const template = this.templates.find(t => t.name === templateName);
         if (!template) return;
@@ -308,9 +299,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Use a recent task to start a new session
-     */
+    // Use a recent task to start a new session
+    
     useRecentTask(taskName, category) {
         const preferences = storage.getPreferences();
         const task = {
@@ -332,12 +322,10 @@ class HomeController {
         }
     }
 
-    /**
-     * Resume an incomplete task
-     */
-    /**
-     * Resume an incomplete task
-     */
+    // Resume an incomplete task
+    
+    // Resume an incomplete task
+    
     resumeIncompleteTask(taskId) {
         const incompleteTasks = storage.getIncompleteTasks();
         const incompleteTask = incompleteTasks.find(t => t.id === taskId);
@@ -361,9 +349,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Get user statistics for dashboard
-     */
+    // Get user statistics for dashboard
+    
     getUserStats() {
         const history = storage.getHistory();
         const completedSessions = history.filter(h => h.completed);
@@ -392,9 +379,8 @@ class HomeController {
         };
     }
 
-    /**
-     * Get most frequently used category
-     */
+    // Get most frequently used category
+    
     getMostUsedCategory(sessions) {
         const categoryCounts = {};
         sessions.forEach(session => {
@@ -407,9 +393,8 @@ class HomeController {
         return mostUsed ? mostUsed[0] : null;
     }
 
-    /**
-     * Calculate current streak of consecutive days with sessions
-     */
+    // Calculate current streak of consecutive days with sessions
+    
     getCurrentStreak(sessions) {
         if (sessions.length === 0) return 0;
 
@@ -492,9 +477,8 @@ class HomeController {
         return content;
     }
 
-    /**
-     * Show user statistics modal
-     */
+    // Show user statistics modal
+    
     showStatsModal() {
         const content = this.getStatsContent();
 
@@ -527,9 +511,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Show quick start options
-     */
+    // Show quick start options
+    
     showQuickStart() {
         const recentCategories = this.getRecentCategories();
         const preferences = storage.getPreferences();
@@ -596,9 +579,8 @@ class HomeController {
         }, 100);
     }
 
-    /**
-     * Start quick task from modal
-     */
+    // Start quick task from modal
+    
     startQuickTask() {
         const taskName = document.getElementById('quickTaskName').value.trim();
         const category = document.getElementById('quickCategory').value;
@@ -629,9 +611,8 @@ class HomeController {
         }
     }
 
-    /**
-     * Get recent categories for quick start
-     */
+    // Get recent categories for quick start
+    
     getRecentCategories() {
         const history = storage.getHistory();
         const categories = [...new Set(history.map(h => h.category))];
@@ -643,18 +624,16 @@ class HomeController {
         return allCategories.slice(0, 6); // Limit to 6 categories
     }
 
-    /**
-     * Refresh all data on the home page
-     */
+    // Refresh all data on the home page
+    
     refreshData() {
         this.renderCarousel();
         this.renderRecentTasks();
         this.renderIncompleteTasks();
     }
 
-    /**
-     * Handle search functionality
-     */
+    // Handle search functionality
+    
     searchTasks(query) {
         const history = storage.getHistory();
         const filteredTasks = history.filter(task =>
@@ -665,25 +644,24 @@ class HomeController {
         return filteredTasks;
     }
 
-    /**
-     * Show motivational message based on progress
-     */
+    // Show motivational message based on progress
+    
     showMotivationalMessage() {
         const stats = this.getUserStats();
         let message = '';
 
         if (stats.currentStreak >= 7) {
-            message = `Amazing! You're on a ${stats.currentStreak}-day streak! 🔥`;
+            message = `Amazing! You're on a ${stats.currentStreak}-day streak!`;
         } else if (stats.currentStreak >= 3) {
-            message = `Great momentum! ${stats.currentStreak} days in a row! 💪`;
+            message = `Great momentum! ${stats.currentStreak} days in a row!`;
         } else if (stats.totalSessions >= 50) {
-            message = `You're a focus champion with ${stats.totalSessions} sessions! 🏆`;
+            message = `You're a focus champion with ${stats.totalSessions} sessions!`;
         } else if (stats.totalSessions >= 10) {
-            message = `You're building great habits! Keep it up! ⭐`;
+            message = `You're building great habits! Keep it up!`;
         } else if (stats.totalSessions > 0) {
-            message = `Great start! Every session counts! 🌟`;
+            message = `Great start! Every session counts!`;
         } else {
-            message = `Ready to start your focus journey? 🚀`;
+            message = `Ready to start your focus journey?`;
         }
 
         if (message) {
@@ -691,16 +669,14 @@ class HomeController {
         }
     }
 
-    /**
-     * Get template by name
-     */
+    // Get template by name
+    
     getTemplate(name) {
         return this.templates.find(t => t.name === name);
     }
 
-    /**
-     * Add custom template
-     */
+    // Add custom template
+    
     addCustomTemplate(template) {
         this.templates.push({
             ...template,
@@ -710,9 +686,8 @@ class HomeController {
         this.renderTemplates();
     }
 
-    /**
-     * Handle template long press for edit/delete
-     */
+    // Handle template long press for edit/delete
+    
     handleTemplateLongPress(templateName) {
         const template = this.getTemplate(templateName);
         if (!template) return;
@@ -734,9 +709,8 @@ class HomeController {
         modal.showCustomModal(`${template.name} Options`, '', actions);
     }
 
-    /**
-     * Check if it's a new day and show daily motivation
-     */
+    // Check if it's a new day and show daily motivation
+    
     checkDailyMotivation() {
         const lastShown = localStorage.getItem('lastMotivationShown');
         const today = new Date().toDateString();
@@ -750,5 +724,4 @@ class HomeController {
     }
 }
 
-// Export the class, don't instantiate yet
 window.HomeController = HomeController;

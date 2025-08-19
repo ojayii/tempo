@@ -1,7 +1,6 @@
-/**
- * Storage Manager - Handles all localStorage operations
- * Designed for easy migration to remote database
- */
+// Storage Manager - Handles all localStorage operations
+// Designed for easy migration to remote database
+
 class StorageManager {
     constructor() {
         this.storageKey = 'focusTimer';
@@ -9,9 +8,8 @@ class StorageManager {
         this.themeKey = 'theme';
     }
 
-    /**
-     * Get the complete application state
-     */
+    // Get the complete application state
+    
     getState() {
         try {
             const saved = localStorage.getItem(this.storageKey);
@@ -22,9 +20,8 @@ class StorageManager {
         }
     }
 
-    /**
-     * Save the complete application state
-     */
+    // Save the complete application state
+    
     saveState(state) {
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(state));
@@ -35,9 +32,8 @@ class StorageManager {
         }
     }
 
-    /**
-     * Get default state structure
-     */
+    // Get default state structure
+    
     getDefaultState() {
         return {
             history: [],
@@ -55,17 +51,15 @@ class StorageManager {
         };
     }
 
-    /**
-     * Get user's session history
-     */
+    // Get user's session history
+    
     getHistory() {
         const state = this.getState();
         return state.history || [];
     }
 
-    /**
-     * Add entry to history
-     */
+    // Add entry to history
+    
     addToHistory(task, duration, completed = true) {
         const state = this.getState();
         const entry = {
@@ -99,17 +93,15 @@ class StorageManager {
         return entry;
     }
 
-    /**
-     * Get incomplete tasks
-     */
+    // Get incomplete tasks
+    
     getIncompleteTasks() {
         const state = this.getState();
         return state.incompleteTasks || [];
     }
 
-    /**
-     * Save incomplete task
-     */
+    // Save incomplete task
+    
     saveIncompleteTask(task, timeRemaining, mode) {
         const state = this.getState();
         state.incompleteTasks = state.incompleteTasks || [];
@@ -118,7 +110,7 @@ class StorageManager {
         state.incompleteTasks = state.incompleteTasks.filter(t => t.task.name !== task.name);
 
         // Add new incomplete task
-        const totalTimeForTask = task.workDuration * 60;
+        // const totalTimeForTask = task.workDuration60;
         const timeSpent = totalTimeForTask - timeRemaining;
         
         const incompleteTask = {
@@ -143,35 +135,31 @@ class StorageManager {
         return incompleteTask;
     }
 
-    /**
-     * Remove incomplete task
-     */
+    // Remove incomplete task
+    
     removeIncompleteTask(taskId) {
         const state = this.getState();
         state.incompleteTasks = (state.incompleteTasks || []).filter(t => t.id !== taskId);
         this.saveState(state);
     }
 
-    /**
-     * Get user preferences
-     */
+    // Get user preferences
+    
     getPreferences() {
         const state = this.getState();
         return state.preferences || {};
     }
 
-    /**
-     * Update user preferences
-     */
+    // Update user preferences
+    
     updatePreferences(newPreferences) {
         const state = this.getState();
         state.preferences = { ...state.preferences, ...newPreferences };
         this.saveState(state);
     }
 
-    /**
-     * Save active session for crash recovery
-     */
+    // Save active session for crash recovery
+    
     saveActiveSession(sessionData) {
         try {
             localStorage.setItem(this.sessionKey, JSON.stringify({
@@ -183,9 +171,8 @@ class StorageManager {
         }
     }
 
-    /**
-     * Get active session for crash recovery
-     */
+    // Get active session for crash recovery
+    
     getActiveSession() {
         try {
             const saved = localStorage.getItem(this.sessionKey);
@@ -196,38 +183,33 @@ class StorageManager {
         }
     }
 
-    /**
-     * Clear active session
-     */
+    // Clear active session
+    
     clearActiveSession() {
         localStorage.removeItem(this.sessionKey);
     }
 
-    /**
-     * Get theme preference
-     */
+    // Get theme preference
+    
     getTheme() {
         return localStorage.getItem(this.themeKey) || 'light';
     }
 
-    /**
-     * Save theme preference
-     */
+    // Save theme preference
+    
     saveTheme(theme) {
         localStorage.setItem(this.themeKey, theme);
     }
 
-    /**
-     * Get user statistics
-     */
+    // Get user statistics
+    
     getStats() {
         const state = this.getState();
         return state.stats || {};
     }
 
-    /**
-     * Reset all data
-     */
+    // Reset all data
+    
     resetAllData() {
         localStorage.removeItem(this.storageKey);
         localStorage.removeItem(this.sessionKey);
@@ -235,9 +217,8 @@ class StorageManager {
         return true;
     }
 
-    /**
-     * Export data for backup
-     */
+    // Export data for backup
+    
     exportData() {
         const state = this.getState();
         return {
@@ -247,9 +228,8 @@ class StorageManager {
         };
     }
 
-    /**
-     * Import data from backup
-     */
+    // Import data from backup
+    
     importData(data) {
         try {
             // Validate data structure
@@ -274,5 +254,4 @@ class StorageManager {
     }
 }
 
-// Export the class, don't instantiate yet
 window.StorageManager = StorageManager;

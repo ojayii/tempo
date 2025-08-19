@@ -2,7 +2,7 @@ class Carousel {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
         this.carousel = this.container.querySelector('.carousel');
-        this.seats = []; // This is like "seats" in your sample
+        this.seats = [];
         this.interval = options.interval || 2000;
         this.autoPlay = options.autoPlay !== false;
         this.intervalId = null;
@@ -14,7 +14,6 @@ class Carousel {
         this.seats = Array.from(this.carousel.children);
         if (this.seats.length === 0) return;
         
-        // Set the LAST item as initial reference (like your sample)
         const lastItem = this.seats[this.seats.length - 1];
         lastItem.classList.add('is-ref');
         lastItem.style.order = '1';
@@ -33,17 +32,15 @@ class Carousel {
         }
     }
     
-    // This matches your "next" function exactly
     next(el) {
         const nextEl = el.nextElementSibling;
         if (nextEl) {
             return nextEl;
         } else {
-            return this.seats[0]; // Return first seat
+            return this.seats[0]; 
         }
     }
     
-    // This matches your "progress" function exactly
     progress() {
         const el = this.carousel.querySelector('.is-ref');
         if (!el) return; // Safety check

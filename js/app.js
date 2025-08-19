@@ -7,7 +7,9 @@ class FocusTimerApp {
         this.version = '1.0.0';
         this.initialized = false;
         this.modules = {};
-        // Don't auto-init since main.js will handle it
+        this.deferredInstallPrompt = null;
+        this.installPromptFired = false;
+        this.userHasInteracted = false;
     }
 
     /**
@@ -43,6 +45,42 @@ class FocusTimerApp {
      * Setup global event listeners
      */
     setupGlobalEventListeners() {
+        // Enhanced beforeinstallprompt handler
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt event fired!');
+            e.preventDefault();
+            this.deferredInstallPrompt = e;
+            this.installPromptFired = true;
+            
+            // Optional: Show install button immediately if you have one in UI
+            this.updateInstallButtonVisibility();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('App was installed successfully!');
+            this.deferredInstallPrompt = null;
+            this.installPromptFired = false;
+            
+            if (typeof uiComponents !== 'undefined') {
+                uiComponents.showNotification('App installed successfully! 🎉', 3000);
+            }
+            
+            // Hide install button if you have one
+            this.updateInstallButtonVisibility();
+        });
+
+        // Track user interaction to help with install prompt timing
+        const trackInteraction = () => {
+            if (!this.userHasInteracted) {
+                this.userHasInteracted = true;
+                console.log('👆 User interaction detected - install prompt may now be available');
+            }
+        };
+
+        document.addEventListener('click', trackInteraction, { once: true });
+        document.addEventListener('keydown', trackInteraction, { once: true });
+        document.addEventListener('touchstart', trackInteraction, { once: true });
+
         // Handle online/offline status
         window.addEventListener('online', () => {
             if (typeof uiComponents !== 'undefined') {
@@ -54,13 +92,6 @@ class FocusTimerApp {
             if (typeof uiComponents !== 'undefined') {
                 uiComponents.showNotification('You\'re offline - app will continue working', 3000);
             }
-        });
-
-        // Handle app installation
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            this.deferredInstallPrompt = e;
-            this.showInstallPrompt();
         });
 
         // Handle window focus/blur
@@ -111,6 +142,8 @@ class FocusTimerApp {
                 })
                 .catch(error => {
                     console.log('Service Worker registration failed:', error);
+                    // Create a minimal service worker if registration fails
+                    this.createMinimalServiceWorker();
                 });
         }
 
@@ -119,7 +152,7 @@ class FocusTimerApp {
         if (!themeColorMeta) {
             themeColorMeta = document.createElement('meta');
             themeColorMeta.name = 'theme-color';
-            themeColorMeta.content = '#ffffff';
+            themeColorMeta.content = '#10b981';
             document.head.appendChild(themeColorMeta);
         }
 
@@ -130,6 +163,55 @@ class FocusTimerApp {
             viewportMeta.name = 'viewport';
             viewportMeta.content = 'width=device-width, initial-scale=1.0, user-scalable=no';
             document.head.appendChild(viewportMeta);
+        }
+
+        // Check if manifest is linked
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        if (!manifestLink) {
+            console.warn('No manifest link found. PWA installation may not work.');
+        }
+
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            console.log('📱 App is running as installed PWA');
+        }
+    }
+
+    /**
+     * Create a minimal service worker if none exists
+     */
+    async createMinimalServiceWorker() {
+        try {
+            const swCode = `
+                console.log('Minimal service worker loaded');
+                
+                self.addEventListener('install', (event) => {
+                    console.log('SW: Install event');
+                    self.skipWaiting();
+                });
+                
+                self.addEventListener('activate', (event) => {
+                    console.log('SW: Activate event');
+                    event.waitUntil(clients.claim());
+                });
+                
+                self.addEventListener('fetch', (event) => {
+                    // Let browser handle all fetch requests normally
+                    return;
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            const registration = await navigator.serviceWorker.register(swUrl);
+            console.log('Minimal service worker created and registered');
+            
+            // Clean up
+            URL.revokeObjectURL(swUrl);
+            
+        } catch (error) {
+            console.error('Failed to create minimal service worker:', error);
         }
     }
 
@@ -179,23 +261,93 @@ class FocusTimerApp {
     }
 
     /**
-     * Show PWA install prompt
+     * Check if PWA installation is available
+     */
+    canInstallPWA() {
+        // Check if install prompt is available
+        if (this.deferredInstallPrompt) {
+            return true;
+        }
+
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            return false;
+        }
+
+        // Check if running on HTTPS or localhost
+        const isSecure = location.protocol === 'https:' || location.hostname === 'localhost';
+        if (!isSecure) {
+            console.warn('PWA installation requires HTTPS or localhost');
+            return false;
+        }
+
+        // Check if service worker is supported
+        if (!('serviceWorker' in navigator)) {
+            console.warn('Service Worker not supported');
+            return false;
+        }
+
+        // Check if beforeinstallprompt is supported
+        if (!('onbeforeinstallprompt' in window)) {
+            console.warn('beforeinstallprompt not supported');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Show PWA install prompt - FIXED VERSION
      */
     showInstallPrompt() {
-        
-        if (!this.deferredInstallPrompt) return;
-        
+        console.log('showInstallPrompt called');
+        console.log('Deferred prompt available:', !!this.deferredInstallPrompt);
+        console.log('User has interacted:', this.userHasInteracted);
+        console.log('Install prompt fired:', this.installPromptFired);
+
+        // Check if app is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+            console.log('📱 App is already installed');
+            if (typeof uiComponents !== 'undefined') {
+                uiComponents.showNotification('App is already installed!', 3000);
+            }
+            return;
+        }
+
+        // If we have the deferred prompt, use it directly
+        if (this.deferredInstallPrompt) {
+            console.log('Using deferred install prompt');
+            this.installApp();
+            return;
+        }
+
+        // If we don't have the deferred prompt yet, show the modal anyway
+        // This covers cases where the prompt hasn't fired yet but user wants to install
+        console.log('No deferred prompt yet, showing install info modal');
+
         const content = `
-        <div style="text-align: center; padding: 20px 0;">
-        <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white;">
-        <i class="fas fa-mobile-alt"></i>
-        </div>
-        <h3 style="margin-bottom: 12px;">Install Focus Timer</h3>
-        <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
-        Install Focus Timer on your device for quick access and a native app experience. 
-        Works offline and starts faster!
-        </p>
-        </div>
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white;">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 style="margin-bottom: 12px;">Install Focus Timer</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
+                    ${this.deferredInstallPrompt ? 
+                        'Install Focus Timer on your device for quick access and a native app experience. Works offline and starts faster!' :
+                        'To install this app, use your browser\'s install option (usually in the address bar or menu). Or wait a moment and try again - the install prompt may become available shortly.'
+                    }
+                </p>
+                ${!this.canInstallPWA() ? `
+                    <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin: 16px 0; text-align: left;">
+                        <strong style="color: #92400e;">Requirements for installation:</strong>
+                        <ul style="margin: 8px 0 0 16px; color: #92400e; font-size: 0.9rem;">
+                            <li>Must be served over HTTPS (or localhost)</li>
+                            <li>Requires a compatible browser (Chrome, Edge, etc.)</li>
+                            <li>App must not already be installed</li>
+                        </ul>
+                    </div>
+                ` : ''}
+            </div>
         `;
         
         const actions = [
@@ -204,42 +356,94 @@ class FocusTimerApp {
                 icon: 'fas fa-times',
                 type: 'muted',
                 onClick: 'app.dismissInstallPrompt(); modal.hideCustomModal();'
-            },
-            {
+            }
+        ];
+
+        // Only show install button if we have the deferred prompt
+        if (this.deferredInstallPrompt) {
+            actions.push({
                 text: 'Install App',
                 icon: 'fas fa-download',
                 type: 'primary',
                 onClick: 'app.installApp(); modal.hideCustomModal();'
-            }
-        ];
+            });
+        } else {
+            actions.push({
+                text: 'Try Again',
+                icon: 'fas fa-redo',
+                type: 'primary',
+                onClick: 'app.retryInstallPrompt(); modal.hideCustomModal();'
+            });
+        }
         
         if (typeof modal !== 'undefined') {
             modal.showCustomModal('Install App', content, actions);
+        } else {
+            // Fallback if modal is not available
+            if (this.deferredInstallPrompt) {
+                this.installApp();
+            } else {
+                alert('Install option not ready yet. Please try again in a moment or use your browser\'s install option.');
+            }
         }
     }
 
     /**
-     * Install the PWA
+     * Retry install prompt after a delay
+     */
+    retryInstallPrompt() {
+        console.log('Retrying install prompt...');
+        
+        // Wait a bit and try again
+        setTimeout(() => {
+            this.showInstallPrompt();
+        }, 1000);
+    }
+
+    /**
+     * Install the PWA - IMPROVED VERSION
      */
     async installApp() {
-        if (!this.deferredInstallPrompt) return;
+        console.log('📲 installApp called');
+        
+        if (!this.deferredInstallPrompt) {
+            console.log('No deferred install prompt available');
+            
+            // Provide helpful feedback
+            if (typeof uiComponents !== 'undefined') {
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    uiComponents.showNotification('App is already installed!', 3000);
+                } else {
+                    uiComponents.showNotification('Install option not ready yet. Please try again in a moment.', 4000);
+                }
+            }
+            return;
+        }
 
         try {
+            console.log('Showing install prompt...');
             const result = await this.deferredInstallPrompt.prompt();
             console.log('Install prompt result:', result);
             
             if (result.outcome === 'accepted') {
+                console.log('User accepted the install prompt!');
                 if (typeof uiComponents !== 'undefined') {
-                    uiComponents.showNotification('App installed successfully!');
+                    uiComponents.showNotification('Installing app...', 2000);
+                }
+            } else {
+                console.log('User dismissed the install prompt');
+                if (typeof uiComponents !== 'undefined') {
+                    uiComponents.showNotification('Installation cancelled', 2000);
                 }
             }
         } catch (error) {
             console.error('Install failed:', error);
             if (typeof uiComponents !== 'undefined') {
-                uiComponents.showNotification('Install failed. Please try again.');
+                uiComponents.showNotification('Install failed. Please try again.', 3000);
             }
         }
 
+        // Clear the deferred prompt
         this.deferredInstallPrompt = null;
     }
 
@@ -247,8 +451,20 @@ class FocusTimerApp {
      * Dismiss install prompt
      */
     dismissInstallPrompt() {
+        console.log('Install prompt dismissed by user');
         this.deferredInstallPrompt = null;
         localStorage.setItem('installPromptDismissed', Date.now().toString());
+    }
+
+    /**
+     * Update install button visibility (if you have one in your UI)
+     */
+    updateInstallButtonVisibility() {
+        const installButton = document.querySelector('[data-install-button]');
+        if (installButton) {
+            const canInstall = this.canInstallPWA() && this.deferredInstallPrompt;
+            installButton.style.display = canInstall ? 'block' : 'none';
+        }
     }
 
     /**
@@ -334,6 +550,11 @@ class FocusTimerApp {
         return {
             version: this.version,
             initialized: this.initialized,
+            installPromptFired: this.installPromptFired,
+            deferredPromptAvailable: !!this.deferredInstallPrompt,
+            userHasInteracted: this.userHasInteracted,
+            canInstall: this.canInstallPWA(),
+            isInstalled: window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true,
             userAgent: navigator.userAgent,
             platform: navigator.platform,
             language: navigator.language,
