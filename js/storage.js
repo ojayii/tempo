@@ -110,7 +110,7 @@ class StorageManager {
         state.incompleteTasks = state.incompleteTasks.filter(t => t.task.name !== task.name);
 
         // Add new incomplete task
-        // const totalTimeForTask = task.workDuration60;
+        const totalTimeForTask = task.workDuration * 60;
         const timeSpent = totalTimeForTask - timeRemaining;
         
         const incompleteTask = {

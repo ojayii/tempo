@@ -300,7 +300,7 @@ class ModalController {
                         </div>
                     </div>
                     
-                    <div style="max-height: 300px; overflow-y: auto;">
+                    <div style="max-hight: 300px; overflow-y: ato;">
                         ${recentHistory.map(entry => `
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
                                 <div>

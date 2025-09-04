@@ -101,7 +101,7 @@
 }
 
 .progress-ring circle {
-    transition: stroke-dashoffset 0.3s ease;
+    transition: stroke-dashoffset 1s ease;
 }
 
 /* Timer Controls */

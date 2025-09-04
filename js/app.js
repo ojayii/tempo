@@ -173,7 +173,7 @@ class FocusTimerApp {
 
         // Check if app is already installed
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            console.log('📱 App is running as installed PWA');
+            console.log('App is running as installed PWA');
         }
     }
 
@@ -307,7 +307,7 @@ class FocusTimerApp {
 
         // Check if app is already installed
         if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-            console.log('📱 App is already installed');
+            console.log('App is already installed');
             if (typeof uiComponents !== 'undefined') {
                 uiComponents.showNotification('App is already installed!', 3000);
             }
@@ -330,10 +330,10 @@ class FocusTimerApp {
                 <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white;">
                     <i class="fas fa-mobile-alt"></i>
                 </div>
-                <h3 style="margin-bottom: 12px;">Install Focus Timer</h3>
+                <h3 style="margin-bottom: 12px;">Install Tempo</h3>
                 <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;">
                     ${this.deferredInstallPrompt ? 
-                        'Install Focus Timer on your device for quick access and a native app experience. Works offline and starts faster!' :
+                        'Install Tempo on your device for quick access and a native app experience. Works offline and starts faster!' :
                         'To install this app, use your browser\'s install option (usually in the address bar or menu). Or wait a moment and try again - the install prompt may become available shortly.'
                     }
                 </p>
