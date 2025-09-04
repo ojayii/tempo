@@ -1,6 +1,6 @@
 /**
  * Timer Controller
- * Pause = Break Mode | Play During Break = Resume Focus | Break Completion = Alert + Focus Ready
+ * Updated with Modal-based Pause/Break Flow
  */
 class TimerController {
     constructor() {
@@ -23,7 +23,7 @@ class TimerController {
         this.restoreSession();
         this.updateDisplay();
         this.setupEventListeners();
-        console.log('TimerController: Initialized with new logic');
+        console.log('TimerController: Initialized with modal-based flow');
     }
 
     /**
@@ -89,6 +89,9 @@ class TimerController {
         console.log('TimerController: Task resumed in focus mode');
     }
 
+    /**
+     * Updated toggle timer with modal-based flow
+     */
     toggleTimer() {
         if (!this.currentTask) {
             console.log('TimerController: No task set');
@@ -98,13 +101,13 @@ class TimerController {
         console.log('TimerController: Toggle called - isRunning:', this.isRunning, 'currentMode:', this.currentMode, 'isPaused:', this.isPaused);
 
         if (this.currentMode === 'break' && this.isRunning) {
-            // Break is actively running - clicking pause/play should CANCEL BREAK and go to focus
-            console.log('TimerController: Break is running - CANCELLING break and switching to focus');
-            this.cancelBreakAndResumeFocus();
+            // Break is actively running - clicking pause should show break options modal
+            console.log('TimerController: Break is running - showing break options modal');
+            this.showBreakOptionsModal();
         } else if (this.currentMode === 'focus' && this.isRunning) {
-            // Focus is actively running - clicking pause should START BREAK
-            console.log('TimerController: Focus is running - PAUSING and starting break');
-            this.pauseAndStartBreak();
+            // Focus is actively running - clicking pause should show work pause modal
+            console.log('TimerController: Focus is running - showing work pause modal');
+            this.showWorkPauseModal();
         } else if (this.currentMode === 'focus' && !this.isRunning) {
             // Focus is paused/stopped - clicking play should START FOCUS
             console.log('TimerController: Focus is paused - STARTING focus');
@@ -114,26 +117,164 @@ class TimerController {
         }
     }
 
-    pauseAndStartBreak() {
-        console.log('TimerController: PAUSE clicked - switching to break mode');
+    /**
+     * Show modal when pausing work mode
+     */
+    showWorkPauseModal() {
+        // Pause the timer first
+        this.pauseTimer();
         
-        // Stop current focus timer
+        const content = `
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="width: 60px; height: 60px; background: var(--gradient-warning); border-radius: 15px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;">
+                    <i class="fas fa-pause"></i>
+                </div>
+                <h3 style="margin-bottom: 8px;">Work Session Paused</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    What would you like to do next?
+                </p>
+                <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Time remaining: ${Math.floor(this.focusTimeRemaining / 60)}:${(this.focusTimeRemaining % 60).toString().padStart(2, '0')}
+                    </div>
+                    <div style="font-size: 14px; color: var(--text-secondary);">
+                        Task: ${this.currentTask.name}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const actions = [
+            {
+                text: 'Resume Work',
+                icon: 'fas fa-play',
+                type: 'muted',
+                onClick: 'timerController.resumeWork(); modal.hideCustomModal();'
+            },
+            {
+                text: 'Take Break',
+                icon: 'fas fa-coffee',
+                onClick: 'timerController.startBreakFromPause(); modal.hideCustomModal();'
+            }
+        ];
+
+        if (typeof modal !== 'undefined') {
+            modal.showCustomModal('Work Session Paused', content, actions);
+        }
+    }
+
+    /**
+     * Show modal when pausing break mode
+     */
+    showBreakOptionsModal() {
+        // Pause the break timer first
+        this.pauseBreakTimer();
+        
+        const content = `
+            <div style="text-align: center; padding: 20px 0;">
+                <div style="width: 60px; height: 60px; background: var(--gradient-secondary); border-radius: 15px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <h3 style="margin-bottom: 8px;">Break Time</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    What would you like to do?
+                </p>
+                <div style="background: var(--bg-secondary); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Break time remaining: ${Math.floor(this.breakTimeRemaining / 60)}:${(this.breakTimeRemaining % 60).toString().padStart(2, '0')}
+                    </div>
+                    <div style="font-size: 14px; color: var(--text-secondary);">
+                        Focus time left: ${Math.floor(this.focusTimeRemaining / 60)}:${(this.focusTimeRemaining % 60).toString().padStart(2, '0')}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const actions = [
+            {
+                text: 'Continue Break',
+                icon: 'fas fa-play',
+                type: 'muted',
+                onClick: 'timerController.resumeBreak(); modal.hideCustomModal();'
+            },
+            {
+                text: 'Back to Work',
+                icon: 'fas fa-briefcase',
+                onClick: 'timerController.switchToWorkFromBreak(); modal.hideCustomModal();'
+            }
+        ];
+
+        if (typeof modal !== 'undefined') {
+            modal.showCustomModal('Break Options', content, actions);
+        }
+    }
+
+    /**
+     * Pause the current timer (work mode)
+     */
+    pauseTimer() {
+        console.log('TimerController: Pausing work timer');
+        
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
         
-        // Update states FIRST
         this.isRunning = false;
         this.isPaused = true;
+        
+        this.updateDisplay();
+        this.updateControls();
+        this.saveSession();
+    }
+
+    /**
+     * Pause the break timer
+     */
+    pauseBreakTimer() {
+        console.log('TimerController: Pausing break timer');
+        
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+        
+        this.isRunning = false;
+        // Keep isPaused true to maintain break state
+        
+        this.updateDisplay();
+        this.updateControls();
+        this.saveSession();
+    }
+
+    /**
+     * Resume work mode (from pause modal)
+     */
+    resumeWork() {
+        console.log('TimerController: Resuming work from pause modal');
+        this.startFocus();
+        
+        if (typeof uiComponents !== 'undefined') {
+            uiComponents.showNotification('Work session resumed!', 2000);
+        }
+    }
+
+    /**
+     * Start break from paused work state
+     */
+    startBreakFromPause() {
+        console.log('TimerController: Starting break from paused work');
+        
+        // Switch to break mode
         this.currentMode = 'break';
+        this.isPaused = true;
         
         // Reset break time to full duration
         this.breakTimeRemaining = this.currentTask?.breakDuration * 60;
         
         console.log('TimerController: Switched to break mode. Break time:', this.breakTimeRemaining);
         
-        // Auto-start break countdown
+        // Start break countdown
         this.startBreakCountdown();
         
         this.updateDisplay();
@@ -145,21 +286,32 @@ class TimerController {
         }
     }
 
-    cancelBreakAndResumeFocus() {
-        console.log('TimerController: CANCELLING BREAK - returning to focus mode');
+    /**
+     * Resume break timer (from break options modal)
+     */
+    resumeBreak() {
+        console.log('TimerController: Resuming break from options modal');
         
-        // Stop break timer
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
+        // Continue break countdown
+        this.startBreakCountdown();
+        
+        if (typeof uiComponents !== 'undefined') {
+            uiComponents.showNotification('Break resumed!', 2000);
         }
+    }
+
+    /**
+     * Switch to work mode from break (from break options modal)
+     */
+    switchToWorkFromBreak() {
+        console.log('TimerController: Switching to work from break options modal');
         
         // Switch back to focus mode (focus time remains where it was)
         this.currentMode = 'focus';
         this.isRunning = false;
         this.isPaused = false;
         
-        // Reset break time (break progress is never saved)
+        // Reset break time (break progress is discarded)
         this.breakTimeRemaining = this.currentTask?.breakDuration * 60;
         
         console.log('TimerController: Switched to focus mode. Focus time remaining:', this.focusTimeRemaining);
@@ -169,7 +321,7 @@ class TimerController {
         this.saveSession();
         
         if (typeof uiComponents !== 'undefined') {
-            uiComponents.showNotification('Back to focus mode.', 3000);
+            uiComponents.showNotification('Back to work mode!', 2000);
         }
     }
 
@@ -444,7 +596,6 @@ class TimerController {
             }
             if (pauseBtn) {
                 pauseBtn.style.background = 'var(--gradient-primary)'; // Green
-                // pauseBtn.style.background = 'var(--gradient-warning)'; // Yellow for pause
             }
         } else {
             // BREAK MODE - BLUE BUTTONS
@@ -502,13 +653,11 @@ class TimerController {
 
         if (this.currentTask) {
             if (taskInfo) taskInfo.classList.remove('hidden');
-            // if (addTaskBtn) addTaskBtn.style.display = 'none !important';
             if (addTaskBtn) addTaskBtn.classList.add('hidden')
             if (currentTaskName) currentTaskName.textContent = this.currentTask.name;
             if (currentTaskCategory) currentTaskCategory.textContent = this.currentTask.category;
         } else {
             if (taskInfo) taskInfo.classList.add('hidden');
-            // if (addTaskBtn) addTaskBtn.style.display = 'flex';
             if (addTaskBtn) addTaskBtn.classList.remove('hidden')
         }
     }
